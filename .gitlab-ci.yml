@@ -1,0 +1,27 @@
+image: python:latest
+
+stages:
+  - init
+  - deploy
+
+init:toolchain:
+  when: manual
+  stage: init
+  tags:
+    - gitlab-org-docker
+  script:
+    - apt-get install jq > init:toolchain.ciout.txt
+  artifacts:
+    when: always
+    paths:
+      - toolchain.ciout.txt
+    expire_in: 1 week
+  
+deploy:rds-dr:
+  when: manual
+  stage: deploy
+  tags:
+    - gitlab-org-docker
+  script:
+    - ./rds_dr_deploy.sh
+
